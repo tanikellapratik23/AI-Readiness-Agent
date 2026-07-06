@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HEAIR - Results</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main>
+    <h1>Assessment Results</h1>
+    <p><strong>Role:</strong> {{ role }}</p>
+    <p><strong>Overall Readiness:</strong> {{ scores.overall.level }} — {{ scores.overall.percent }}%</p>
+
+    <h2>Dimension Scores</h2>
+    <ul>
+      {% for dim, v in scores.dimensions.items() %}
+        <li>{{ dim }}: {{ v.percent }}%</li>
+      {% endfor %}
+    </ul>
+
+    <h2>Recommendations</h2>
+    <ul>
+      {% for r in recommendations %}
+        <li>{{ r }}</li>
+      {% endfor %}
+    </ul>
+
+    <section class="chat">
+      <h2>Ask the Agent</h2>
+      <div id="chatbox"></div>
+      <textarea id="message" placeholder="Ask about governance, infrastructure, training..."></textarea>
+      <button id="send">Send</button>
+    </section>
+
+    <p><a href="/">Back to assessment</a></p>
+  </main>
+
+  <script>
+    const sendBtn = document.getElementById('send');
+    const messageEl = document.getElementById('message');
+    const chatbox = document.getElementById('chatbox');
+    const role = "{{ role }}";
+    const scores = {{ scores|tojson }};
+
+    sendBtn.addEventListener('click', async () => {
+      const msg = messageEl.value.trim();
+      if (!msg) return;
+      appendMessage('You', msg);
+      messageEl.value = '';
+      const resp = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: msg, role, scores })
+      });
+      const data = await resp.json();
+      appendMessage('Agent', data.response);
+    });
+
+    function appendMessage(who, text) {
+      const p = document.createElement('p');
+      p.innerHTML = `<strong>${who}:</strong> ${text}`;
+      chatbox.appendChild(p);
+    }
+  </script>
+</body>
+</html>

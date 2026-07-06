@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HEAIR - AI Readiness Assessment</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main>
+    <h1>Higher Ed AI Readiness - Assessment</h1>
+    <form method="post" action="/assess">
+      <label for="role">Select your role</label>
+      <select id="role" name="role" required>
+        {% for role in roles %}
+        <option value="{{ role }}">{{ role }}</option>
+        {% endfor %}
+      </select>
+
+      <section class="questions">
+        {% for q in questions %}
+          <div class="question">
+            <p><strong>{{ q.id }}.</strong> {{ q.text }}</p>
+            {% for key, pair in q.choices.items() %}
+              <label><input type="radio" name="q_{{ q.id }}" value="{{ key }}" required> {{ key }}. {{ pair[1] }}</label><br>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </section>
+
+      <button type="submit">Submit Assessment</button>
+    </form>
+  </main>
+</body>
+</html>
