@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HEAIR - AI Readiness Assessment</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main>
+    <h1>Higher Ed AI Readiness Prototype</h1>
+    <p>This GitHub Pages version runs entirely in the browser as a static client-side prototype. It does not require a Python backend.</p>
+
+    <section id="assessment-section">
+      <form id="assessment-form">
+        <label for="role">Select your role</label>
+        <select id="role" name="role" required></select>
+
+        <section id="questions" class="questions"></section>
+
+        <button type="submit">Submit Assessment</button>
+      </form>
+    </section>
+
+    <section id="results-section" class="hidden">
+      <h2>Assessment Results</h2>
+      <p><strong>Role:</strong> <span id="result-role"></span></p>
+      <p><strong>Overall Readiness:</strong> <span id="result-level"></span> — <span id="result-percent"></span>%</p>
+
+      <h3>Dimension Scores</h3>
+      <ul id="dimension-list"></ul>
+
+      <h3>Recommendations</h3>
+      <ul id="recommendation-list"></ul>
+
+      <section class="chat">
+        <h3>Ask the Agent</h3>
+        <div id="chatbox"></div>
+        <textarea id="message" placeholder="Ask about governance, infrastructure, training..."></textarea>
+        <button id="send">Send</button>
+      </section>
+
+      <button id="back">Back to assessment</button>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
