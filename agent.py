@@ -5,12 +5,20 @@ load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
+# Google Gemini (Generative) API key (do NOT commit keys to the repo)
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
 try:
     import openai
     if OPENAI_API_KEY:
         openai.api_key = OPENAI_API_KEY
 except Exception:
     openai = None
+
+try:
+    import requests
+except Exception:
+    requests = None
 
 
 def _rule_based_response(text: str, role: str, scores: dict) -> str:
@@ -35,6 +43,15 @@ def _rule_based_response(text: str, role: str, scores: dict) -> str:
 
 def chatbot_response(message: str, role: str, scores: dict) -> str:
     text = (message or "").strip().lower()
+
+    # If Google Gemini is configured, prefer it for LLM responses (server-side only)
+    if GEMINI_API_KEY and requests:
+        try:
+            gem_resp = _gemini_response(message, role, scores)
+            if gem_resp:
+                return gem_resp
+        except Exception:
+            pass
 
     # If OpenAI is configured, attempt an LLM-backed response with context
     if openai and OPENAI_API_KEY:
