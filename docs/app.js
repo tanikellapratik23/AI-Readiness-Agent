@@ -299,12 +299,29 @@ function init() {
     document.getElementById('chatbox').innerHTML = '';
     appendMessage('Agent', 'Hi! Ask me about your score, governance, infrastructure, or training.');
 
-    sendButton.onclick = () => {
+    sendButton.onclick = async () => {
       const messageInput = document.getElementById('message');
       const message = messageInput.value.trim();
       if (!message) return;
       appendMessage('You', message);
       messageInput.value = '';
+
+      // If a server-side chat API is configured, call it (must be deployed separately).
+      if (window.CHAT_API_URL) {
+        try {
+          const resp = await fetch(window.CHAT_API_URL + '/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message, role, scores })
+          });
+          const data = await resp.json();
+          appendMessage('Agent', data.response || 'No response from server.');
+          return;
+        } catch (e) {
+          // fall back to local rule-based assistant
+        }
+      }
+
       const response = chatbotResponse(message, role, scores);
       appendMessage('Agent', response);
     };
