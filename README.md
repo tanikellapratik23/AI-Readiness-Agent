@@ -36,9 +36,9 @@ Open http://127.0.0.1:5000 in your browser to use the app locally.
 
 This repository now includes a static client-side prototype under `docs/` that can be hosted on GitHub Pages. It reproduces the assessment scoring and chatbot behavior entirely in the browser, without a Python backend.
 
-GitHub Actions are configured to deploy the `docs/` directory whenever you push to `main`.
+GitHub Actions are configured to deploy the `docs/` directory to the `gh-pages` branch whenever you push to `main`.
 
-To see the site after pushing, enable GitHub Pages for the repository (or wait for the Pages action to deploy). The URL will typically be:
+To see the site after pushing, enable GitHub Pages for the repository and set the source to the `gh-pages` branch. The URL will typically be:
 
 ```text
 https://<your-github-username>.github.io/<repository-name>/
